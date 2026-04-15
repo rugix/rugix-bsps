@@ -1,0 +1,5 @@
+[board]
+machine = "imx8mpevk"
+description = "NXP i.MX 8M Plus Evaluation Kit"
+vendor = "NXP"
+support = "community"

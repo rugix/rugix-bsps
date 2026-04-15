@@ -1,0 +1,15 @@
+parent = "core/debian-bookworm"
+
+recipes = [
+    "core/rugix-ctrl",
+    "core/persist-root-home",
+    "core/ssh",
+    "rugix-extra/debian-setup-network",
+    "rugix-extra/avahi",
+    "enable-root-login",
+]
+
+[parameters."core/ssh"]
+root_authorized_keys = """
+<INSERT YOUR PUBLIC SSH KEY HERE>
+"""

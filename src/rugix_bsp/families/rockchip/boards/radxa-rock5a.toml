@@ -1,0 +1,5 @@
+[board]
+machine = "rock-5a-rk3588s"
+description = "Radxa ROCK 5A (RK3588S)"
+vendor = "Radxa"
+support = "community"

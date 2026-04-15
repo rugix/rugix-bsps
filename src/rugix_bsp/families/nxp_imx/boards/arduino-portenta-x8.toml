@@ -1,0 +1,11 @@
+[board]
+machine = "portenta-x8"
+description = "Arduino Portenta X8 (i.MX8M Mini)"
+vendor = "Arduino"
+support = "community"
+releases = ["6.6.52-2.2.0"]
+
+[release-repos."6.6.52-2.2.0".meta-arduino]
+url = "https://github.com/arduino/meta-arduino.git"
+branch = "scarthgap"
+layers = ["meta-arduino-common", "meta-arduino-nxp"]

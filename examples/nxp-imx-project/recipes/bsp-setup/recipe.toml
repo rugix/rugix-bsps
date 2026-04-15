@@ -1,0 +1,8 @@
+description = "Download and install BSP artifacts from GHCR."
+priority = 900_000
+
+[parameters]
+bsp_registry = { default = "ghcr.io/rugix/rugix-bsps" }
+bsp_board = {}
+bsp_release = {}
+bsp_version = { default = "latest" }

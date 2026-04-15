@@ -1,0 +1,80 @@
+name: Build BSPs
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Nightly rebuild to catch upstream branch changes.
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io/${{ github.repository }}
+
+jobs:
+  detect:
+    name: Detect changed BSPs
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.detect.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Compute build hashes
+        id: detect
+        run: |
+          matrix=$(uv run python -m rugix_bsp.cli detect-changes --registry "$REGISTRY")
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: "Build ${{ matrix.board }} (${{ matrix.release }})"
+    needs: detect
+    if: needs.detect.outputs.matrix != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.detect.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install kas
+        run: pip install kas
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build BSP
+        run: |
+          uv run python -m rugix_bsp.cli build "${{ matrix.board }}" \
+            --release "${{ matrix.release }}"
+
+      - name: Push BSP to registry
+        run: |
+          uv run python -m rugix_bsp.cli push \
+            "output/${{ matrix.board }}-${{ matrix.release }}.bsp.tar.gz" \
+            --registry "$REGISTRY"
+
+  lint:
+    name: Lint & typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv run --group dev ruff check src/
+      - run: uv run --group dev ruff format --check src/
+      - run: uv run --group dev mypy src/

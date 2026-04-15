@@ -1,0 +1,13 @@
+parent = "base"
+
+recipes = [
+    "bsp-setup",
+    "core/set-hostname",
+]
+
+[parameters."bsp-setup"]
+bsp_board = "arduino-portenta-x8"
+bsp_release = "6.6.52-2.2.0"
+
+[parameters."core/set-hostname"]
+hostname = "arduino-portenta-x8"

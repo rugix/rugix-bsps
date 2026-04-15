@@ -1,13 +1,23 @@
 """Build Rugix Bakery BSPs from Yocto vendor BSPs."""
 
-from rugix_bsp.board import Board, BootFlow, DiskLayout, Partition, RawBlob
-from rugix_bsp.kas import YoctoBuild
+from rugix_bsp.models import (
+    Board,
+    BoardFamily,
+    BundlePayload,
+    DiskLayout,
+    FamilyRelease,
+    Partition,
+    RawBlob,
+    ResolvedConfig,
+)
 
 __all__ = [
     "Board",
-    "BootFlow",
+    "BoardFamily",
+    "BundlePayload",
     "DiskLayout",
+    "FamilyRelease",
     "Partition",
     "RawBlob",
-    "YoctoBuild",
+    "ResolvedConfig",
 ]

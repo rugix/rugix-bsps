@@ -1,0 +1,5 @@
+[board]
+machine = "radxa-zero3-rk3566"
+description = "Radxa Zero 3 (RK3566)"
+vendor = "Radxa"
+support = "community"

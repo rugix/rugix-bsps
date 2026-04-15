@@ -13,10 +13,14 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["mypy>=1.0", "ruff>=0.4"]
+dev = ["mypy>=1.0", "ruff>=0.4", "types-pyyaml>=6.0"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/rugix_bsp"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"layers" = "rugix_bsp/_data/layers"
+"templates" = "rugix_bsp/_data/templates"
 
 [tool.mypy]
 python_version = "3.11"

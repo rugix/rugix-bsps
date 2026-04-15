@@ -1,0 +1,13 @@
+parent = "base"
+
+recipes = [
+    "bsp-setup",
+    "core/set-hostname",
+]
+
+[parameters."bsp-setup"]
+bsp_board = "nxp-imx91-frdm"
+bsp_release = "6.6.36-2.1.0"
+
+[parameters."core/set-hostname"]
+hostname = "nxp-imx91-frdm"
