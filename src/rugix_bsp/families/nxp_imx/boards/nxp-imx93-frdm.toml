@@ -1,0 +1,7 @@
+[board]
+machine = "imx93frdm"
+description = "NXP FRDM-iMX93 Evaluation Board"
+vendor = "NXP"
+support = "community"
+releases = ["6.6.36-2.1.0"]
+repo-groups = ["frdm"]

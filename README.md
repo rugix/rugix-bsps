@@ -16,6 +16,7 @@ This decouples hardware enablement from the rootfs build — you can run Debian 
 | Board                   | Family   | SoC          |
 | ----------------------- | -------- | ------------ |
 | NXP FRDM-IMX91          | NXP i.MX | i.MX 91      |
+| NXP FRDM-IMX93          | NXP i.MX | i.MX 93      |
 | NXP i.MX 8M Plus EVK    | NXP i.MX | i.MX 8M Plus |
 | CompuLab UCM-iMX8M-Plus | NXP i.MX | i.MX 8M Plus |
 | Radxa Rock 5B           | Rockchip | RK3588       |
