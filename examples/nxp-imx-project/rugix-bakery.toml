@@ -6,6 +6,11 @@ layer = "nxp-imx91-frdm"
 architecture = "arm64"
 target = "bsp"
 
+[systems.nxp-imx93-frdm]
+layer = "nxp-imx93-frdm"
+architecture = "arm64"
+target = "bsp"
+
 [systems.arduino-portenta-x8]
 layer = "arduino-portenta-x8"
 architecture = "arm64"
