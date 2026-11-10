@@ -1,6 +1,7 @@
 name: Build BSPs
 
 on:
+  pull_request:
   push:
     branches: [main]
   schedule:
@@ -17,6 +18,7 @@ env:
 
 jobs:
   detect:
+    if: github.event_name != 'pull_request'
     name: Detect changed BSPs
     runs-on: ubuntu-latest
     outputs:
@@ -24,13 +26,19 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b # v31
+      - uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550 # v5.2.2
+        with:
+          install: false
+      - name: Install Project Tools
+        env:
+          MISE_GITHUB_TOKEN: ${{ github.token }}
+        run: mise install
 
       - name: Compute build hashes
         id: detect
         run: |
-          matrix=$(uv run python -m rugix_bsp.cli detect-changes --registry "$REGISTRY")
+          matrix=$(mise run detect-changes -- --registry "$REGISTRY")
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
 
   build:
@@ -45,11 +53,14 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
-
-      - name: Install kas
-        run: pip install kas
+      - uses: cachix/install-nix-action@75c75c31ebece974e48ebc36b4ad125bd97bd97b # v31
+      - uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550 # v5.2.2
+        with:
+          install: false
+      - name: Install Project Tools
+        env:
+          MISE_GITHUB_TOKEN: ${{ github.token }}
+        run: mise install
 
       - name: Log in to GHCR
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
@@ -60,13 +71,13 @@ jobs:
 
       - name: Build BSP
         run: |
-          uv run python -m rugix_bsp.cli build "${{ matrix.board }}" \
+          mise run build -- "${{ matrix.board }}" \
             --release "${{ matrix.release }}"
 
       - name: Push BSP to registry
         run: |
-          uv run python -m rugix_bsp.cli push \
-            "output/${{ matrix.board }}-${{ matrix.release }}.bsp.tar.gz" \
+          mise run push -- \
+            "output/${{ matrix.board }}_${{ matrix.release }}.bsp.tar.gz" \
             --registry "$REGISTRY"
 
   lint:
@@ -74,7 +85,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
-      - run: uv run --group dev ruff check src/
-      - run: uv run --group dev ruff format --check src/
-      - run: uv run --group dev mypy src/
+      - uses: jdx/mise-action@8418fedb1110381a0d3ba51a7a415d7c1b884550 # v5.2.2
+        with:
+          install: false
+      - name: Install Project Tools
+        env:
+          MISE_GITHUB_TOKEN: ${{ github.token }}
+        run: mise install
+
+      - run: mise run check

@@ -45,8 +45,7 @@ def cmd_list(args: argparse.Namespace) -> None:
     matrix = build_matrix(boards)
     for board, release in sorted(matrix, key=lambda x: (x[0].name, x[1].name)):
         print(
-            f"  {board.name:<30} {release.name:<20} "
-            f"{board.support:<12} {board.machine}"
+            f"  {board.name:<30} {release.name:<20} {board.support:<12} {board.machine}"
         )
 
 
@@ -155,9 +154,7 @@ def cmd_kas_config(args: argparse.Namespace) -> None:
         print(f"{board.name} ({release.name}): {config_path}")
 
 
-def _parse_archive_name(
-    filename: str, boards: list[Board]
-) -> tuple[Board, str] | None:
+def _parse_archive_name(filename: str, boards: list[Board]) -> tuple[Board, str] | None:
     """Parse board name and release from a <board>_<release>.bsp.tar.gz filename."""
     stem = filename.removesuffix(".tar.gz").removesuffix(".bsp")
     parts = stem.split("_", 1)
