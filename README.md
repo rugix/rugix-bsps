@@ -27,16 +27,15 @@ This decouples hardware enablement from the rootfs build — you can run Debian 
 
 ### Building BSPs
 
-Install Nix with flakes enabled and [mise](https://mise.jdx.dev/), then run
-`mise install` for Python and uv. Build and registry tasks select the
-pinned Nix shell for kas, Podman, and ORAS. The native environment supports x86-64
-and AArch64 Linux; the host must support container builds. Set
-`KAS_CONTAINER_ENGINE=docker` to use an existing Docker installation.
+Install Nix with flakes enabled and [mise](https://mise.jdx.dev/) on x86-64
+or AArch64 Linux with container support. Tasks enter Nix automatically.
+Set `KAS_CONTAINER_ENGINE=docker` to use Docker instead of Podman.
 
 ```sh
-mise run list                        # List available boards
-mise run build nxp-imx91-frdm        # Build a single BSP
-mise run build-all                   # Build all BSPs
+mise install
+mise run list                   # List available boards
+mise run build nxp-imx91-frdm    # Build a single BSP
+mise run build-all              # Build all BSPs
 ```
 
 ### Using a BSP with Rugix Bakery
