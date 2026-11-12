@@ -27,13 +27,16 @@ This decouples hardware enablement from the rootfs build — you can run Debian 
 
 ### Building BSPs
 
-```sh
-just list                        # List available boards
-just build nxp-imx91-frdm        # Build a single BSP
-just build-all                   # Build all BSPs
-```
+Install Nix with flakes enabled and [mise](https://mise.jdx.dev/) on x86-64
+or AArch64 Linux with container support. Tasks enter Nix automatically.
+Set `KAS_CONTAINER_ENGINE=docker` to use Docker instead of Podman.
 
-Requires [uv](https://docs.astral.sh/uv/) and a container engine (Podman or Docker) for `kas-container`.
+```sh
+mise install
+mise run list                   # List available boards
+mise run build nxp-imx91-frdm    # Build a single BSP
+mise run build-all              # Build all BSPs
+```
 
 ### Using a BSP with Rugix Bakery
 
@@ -47,7 +50,7 @@ architecture = "arm64"
 target = "bsp"
 ```
 
-See `examples/imx91-frdm-project/` for a complete working example.
+See `examples/nxp-imx-project/` for a complete working example.
 
 ### BSP Archive Structure
 

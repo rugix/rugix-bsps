@@ -1,0 +1,69 @@
+[tools]
+python = "3.12"
+uv = "latest"
+
+[env]
+KAS_CONTAINER_ENGINE = "{{ get_env(name='KAS_CONTAINER_ENGINE', default='podman') }}"
+SSTATE_DIR = "{{ get_env(name='SSTATE_DIR', default=config_root ~ '/cache/sstate-cache') }}"
+DL_DIR = "{{ get_env(name='DL_DIR', default=config_root ~ '/cache/downloads') }}"
+
+[tasks."list"]
+description = "Run the BSP list command."
+run = '''
+uv run python -m rugix_bsp.cli list "$@"
+'''
+
+[tasks."build"]
+shell = "nix develop \"{{config_root}}\" --command bash -euo pipefail -c"
+description = "Run the BSP build command."
+run = '''
+uv run python -m rugix_bsp.cli build "$@"
+'''
+
+[tasks."build-all"]
+shell = "nix develop \"{{config_root}}\" --command bash -euo pipefail -c"
+description = "Run the BSP build-all command."
+run = '''
+uv run python -m rugix_bsp.cli build-all "$@"
+'''
+
+[tasks."hash"]
+shell = "nix develop \"{{config_root}}\" --command bash -euo pipefail -c"
+description = "Run the BSP hash command."
+run = '''
+uv run python -m rugix_bsp.cli hash "$@"
+'''
+
+[tasks."kas-config"]
+description = "Run the BSP kas-config command."
+run = '''
+uv run python -m rugix_bsp.cli kas-config "$@"
+'''
+
+[tasks."push"]
+shell = "nix develop \"{{config_root}}\" --command bash -euo pipefail -c"
+description = "Run the BSP push command."
+run = '''
+uv run python -m rugix_bsp.cli push "$@"
+'''
+
+[tasks."typecheck"]
+description = "Run Python typecheck."
+run = ["uv run --group dev mypy src/"]
+
+[tasks."lint"]
+description = "Run Python lint."
+run = ["uv run --group dev ruff check src/", "uv run --group dev ruff format --check src/"]
+
+[tasks."fmt"]
+description = "Run Python fmt."
+run = ["uv run --group dev ruff check --fix src/", "uv run --group dev ruff format src/"]
+
+[tasks.check]
+description = "Run lint and type checks."
+depends = ["lint", "typecheck"]
+
+[tasks."detect-changes"]
+shell = "nix develop \"{{config_root}}\" --command bash -euo pipefail -c"
+description = "Print the BSP build matrix for an OCI registry."
+run = 'uv run python -m rugix_bsp.cli detect-changes "$@"'
